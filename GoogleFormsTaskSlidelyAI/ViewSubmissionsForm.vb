@@ -5,10 +5,11 @@ Imports Newtonsoft.Json
 Public Class ViewSubmissionsForm
     Private submissions As List(Of Submission)
     Private currentIndex As Integer = 0
+    Private editing As Boolean = False
 
     Private Async Sub ViewSubmissionsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Initialize form controls
-        Me.Text = "John Doe, Slidely Task 2 - View Submissions"
+        Me.Text = "View Submissions"
 
         ' Retrieve submissions from backend
         submissions = Await GetSubmissions()
@@ -92,6 +93,59 @@ Public Class ViewSubmissionsForm
         End If
     End Function
 
+    Private Async Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
+        If Not editing Then
+            EnableEditing(True)
+        Else
+            Await SaveEditedSubmission()
+            EnableEditing(False)
+        End If
+    End Sub
+
+    Private Sub EnableEditing(enable As Boolean)
+        txtName.ReadOnly = Not enable
+        txtEmail.ReadOnly = Not enable
+        txtPhone.ReadOnly = Not enable
+        txtGitHub.ReadOnly = Not enable
+        txtStopwatch.ReadOnly = Not enable
+        btnEdit.Text = If(enable, "SAVE", "EDIT(CTRL+E)")
+        editing = enable
+    End Sub
+
+    Private Async Function SaveEditedSubmission() As Task
+        Dim name As String = txtName.Text
+        Dim email As String = txtEmail.Text
+        Dim phone As String = txtPhone.Text
+        Dim githubLink As String = txtGitHub.Text
+        Dim stopwatchTime As String = txtStopwatch.Text
+
+        Dim client As New HttpClient()
+        Dim values As New Dictionary(Of String, String) From {
+            {"name", name},
+            {"email", email},
+            {"phone", phone},
+            {"github_link", githubLink},
+            {"stopwatch_time", stopwatchTime}
+        }
+
+        Dim content As New StringContent(JsonConvert.SerializeObject(values), Encoding.UTF8, "application/json")
+        Dim requestUri As String = $"http://localhost:3000/edit?index={currentIndex}"
+        Dim response As HttpResponseMessage = Await client.PutAsync(requestUri, content)
+
+        If response.IsSuccessStatusCode Then
+            MessageBox.Show("Submission updated successfully!")
+            submissions(currentIndex) = New Submission With {
+                .Name = name,
+                .Email = email,
+                .Phone = phone,
+                .GithubLink = githubLink,
+                .StopwatchTime = stopwatchTime
+            }
+        Else
+            MessageBox.Show("Update failed.")
+        End If
+    End Function
+
     Private Sub ClearForm()
         txtName.Text = ""
         txtEmail.Text = ""
@@ -109,6 +163,9 @@ Public Class ViewSubmissionsForm
             Return True
         ElseIf keyData = (Keys.Control Or Keys.D) Then
             btnDelete.PerformClick()
+            Return True
+        ElseIf keyData = (Keys.Control Or Keys.E) Then
+            btnEdit.PerformClick()
             Return True
         End If
         Return MyBase.ProcessCmdKey(msg, keyData)

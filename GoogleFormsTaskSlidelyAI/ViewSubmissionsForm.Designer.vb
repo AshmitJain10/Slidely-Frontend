@@ -36,6 +36,7 @@ Partial Class ViewSubmissionsForm
         btnPrevious = New Button()
         btnNext = New Button()
         btnDelete = New Button()
+        btnEdit = New Button()
         SuspendLayout()
         ' 
         ' Label1
@@ -135,7 +136,7 @@ Partial Class ViewSubmissionsForm
         ' btnPrevious
         ' 
         btnPrevious.BackColor = Color.Yellow
-        btnPrevious.Location = New Point(3, 362)
+        btnPrevious.Location = New Point(22, 384)
         btnPrevious.Name = "btnPrevious"
         btnPrevious.Size = New Size(291, 40)
         btnPrevious.TabIndex = 12
@@ -145,7 +146,7 @@ Partial Class ViewSubmissionsForm
         ' btnNext
         ' 
         btnNext.BackColor = Color.LightBlue
-        btnNext.Location = New Point(275, 408)
+        btnNext.Location = New Point(399, 384)
         btnNext.Name = "btnNext"
         btnNext.Size = New Size(298, 40)
         btnNext.TabIndex = 13
@@ -155,18 +156,29 @@ Partial Class ViewSubmissionsForm
         ' btnDelete
         ' 
         btnDelete.BackColor = Color.Red
-        btnDelete.Location = New Point(470, 362)
+        btnDelete.Location = New Point(399, 448)
         btnDelete.Name = "btnDelete"
         btnDelete.Size = New Size(291, 40)
         btnDelete.TabIndex = 14
         btnDelete.Text = "DELETE (CTRL + D)"
         btnDelete.UseVisualStyleBackColor = False
         ' 
+        ' btnEdit
+        ' 
+        btnEdit.BackColor = Color.Blue
+        btnEdit.Location = New Point(22, 448)
+        btnEdit.Name = "btnEdit"
+        btnEdit.Size = New Size(291, 40)
+        btnEdit.TabIndex = 15
+        btnEdit.Text = "EDIT (CTRL + E)"
+        btnEdit.UseVisualStyleBackColor = False
+        ' 
         ' ViewSubmissionsForm
         ' 
         AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(800, 450)
+        ClientSize = New Size(800, 500)
+        Controls.Add(btnEdit)
         Controls.Add(btnDelete)
         Controls.Add(btnNext)
         Controls.Add(btnPrevious)
@@ -201,4 +213,5 @@ Partial Class ViewSubmissionsForm
     Friend WithEvents btnPrevious As Button
     Friend WithEvents btnNext As Button
     Friend WithEvents btnDelete As Button
+    Friend WithEvents btnEdit As Button
 End Class
