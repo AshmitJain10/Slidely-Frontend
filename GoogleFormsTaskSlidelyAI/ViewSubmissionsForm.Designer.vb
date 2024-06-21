@@ -35,6 +35,7 @@ Partial Class ViewSubmissionsForm
         txtEmail = New TextBox()
         btnPrevious = New Button()
         btnNext = New Button()
+        btnDelete = New Button()
         SuspendLayout()
         ' 
         ' Label1
@@ -134,7 +135,7 @@ Partial Class ViewSubmissionsForm
         ' btnPrevious
         ' 
         btnPrevious.BackColor = Color.Yellow
-        btnPrevious.Location = New Point(82, 378)
+        btnPrevious.Location = New Point(3, 362)
         btnPrevious.Name = "btnPrevious"
         btnPrevious.Size = New Size(291, 40)
         btnPrevious.TabIndex = 12
@@ -144,18 +145,29 @@ Partial Class ViewSubmissionsForm
         ' btnNext
         ' 
         btnNext.BackColor = Color.LightBlue
-        btnNext.Location = New Point(411, 378)
+        btnNext.Location = New Point(275, 408)
         btnNext.Name = "btnNext"
         btnNext.Size = New Size(298, 40)
         btnNext.TabIndex = 13
         btnNext.Text = "NEXT (CTRL + N)"
         btnNext.UseVisualStyleBackColor = False
         ' 
+        ' btnDelete
+        ' 
+        btnDelete.BackColor = Color.Red
+        btnDelete.Location = New Point(470, 362)
+        btnDelete.Name = "btnDelete"
+        btnDelete.Size = New Size(291, 40)
+        btnDelete.TabIndex = 14
+        btnDelete.Text = "DELETE (CTRL + D)"
+        btnDelete.UseVisualStyleBackColor = False
+        ' 
         ' ViewSubmissionsForm
         ' 
         AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 450)
+        Controls.Add(btnDelete)
         Controls.Add(btnNext)
         Controls.Add(btnPrevious)
         Controls.Add(txtEmail)
@@ -188,4 +200,5 @@ Partial Class ViewSubmissionsForm
     Friend WithEvents txtEmail As TextBox
     Friend WithEvents btnPrevious As Button
     Friend WithEvents btnNext As Button
+    Friend WithEvents btnDelete As Button
 End Class

@@ -1,4 +1,5 @@
 ﻿Imports System.Net.Http
+Imports System.Text
 Imports Newtonsoft.Json
 
 Public Class ViewSubmissionsForm
@@ -24,10 +25,8 @@ Public Class ViewSubmissionsForm
 
         If response.IsSuccessStatusCode Then
             Dim responseData As String = Await response.Content.ReadAsStringAsync()
-            Console.WriteLine(responseData) ' Add this line for debugging
-            ' Deserialize responseData into a list of Submission objects
-            Dim submissionList As List(Of Submission) = JsonConvert.DeserializeObject(Of List(Of Submission))(responseData)
-            Return submissionList
+            Dim submissionsList As List(Of Submission) = JsonConvert.DeserializeObject(Of List(Of Submission))(responseData)
+            Return submissionsList
         Else
             MessageBox.Show("Failed to retrieve submissions.")
             Return New List(Of Submission)
@@ -40,8 +39,8 @@ Public Class ViewSubmissionsForm
             txtName.Text = submission.Name
             txtEmail.Text = submission.Email
             txtPhone.Text = submission.Phone
-            txtGitHub.Text = submission.GitHub
-            txtStopwatch.Text = submission.Stopwatch
+            txtGitHub.Text = submission.GithubLink
+            txtStopwatch.Text = submission.StopwatchTime
         End If
     End Sub
 
@@ -59,12 +58,57 @@ Public Class ViewSubmissionsForm
         End If
     End Sub
 
+    Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+        Await DeleteCurrentSubmission()
+    End Sub
+
+    Private Async Function DeleteCurrentSubmission() As Task
+        Dim confirmResult As DialogResult = MessageBox.Show("Are you sure you want to delete this submission?", "Confirm Delete", MessageBoxButtons.YesNo)
+        If confirmResult = DialogResult.Yes Then
+            Await DeleteSubmission(currentIndex)
+            submissions.RemoveAt(currentIndex)
+            If currentIndex >= submissions.Count Then
+                currentIndex = submissions.Count - 1
+            End If
+            If submissions.Count > 0 Then
+                DisplaySubmission(currentIndex)
+            Else
+                ClearForm()
+                MessageBox.Show("No submissions found.")
+            End If
+        End If
+    End Function
+
+    Private Async Function DeleteSubmission(index As Integer) As Task
+        Dim client As New HttpClient()
+        Dim requestUri As String = $"http://localhost:3000/delete?index={index}"
+
+        Dim response As HttpResponseMessage = Await client.DeleteAsync(requestUri)
+
+        If response.IsSuccessStatusCode Then
+            MessageBox.Show("Deletion successful!")
+        Else
+            MessageBox.Show("Deletion failed.")
+        End If
+    End Function
+
+    Private Sub ClearForm()
+        txtName.Text = ""
+        txtEmail.Text = ""
+        txtPhone.Text = ""
+        txtGitHub.Text = ""
+        txtStopwatch.Text = ""
+    End Sub
+
     Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
         If keyData = (Keys.Control Or Keys.P) Then
             btnPrevious.PerformClick()
             Return True
         ElseIf keyData = (Keys.Control Or Keys.N) Then
             btnNext.PerformClick()
+            Return True
+        ElseIf keyData = (Keys.Control Or Keys.D) Then
+            btnDelete.PerformClick()
             Return True
         End If
         Return MyBase.ProcessCmdKey(msg, keyData)
@@ -75,6 +119,6 @@ Public Class Submission
     Public Property Name As String
     Public Property Email As String
     Public Property Phone As String
-    Public Property GitHub As String
-    Public Property Stopwatch As String
+    Public Property GithubLink As String
+    Public Property StopwatchTime As String
 End Class
