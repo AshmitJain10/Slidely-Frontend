@@ -12,11 +12,9 @@ Public Class CreateSubmissionForm
         Label2.Size = New Size(350, 50)
         Label2.Font = New Font("Inter", 10)
 
-        ' Timer setup
         stopwatchTimer.Interval = 1000
         AddHandler stopwatchTimer.Tick, AddressOf OnStopwatchTick
 
-        ' Set initial stopwatch text
         txtStopwatch.Text = stopwatchTime.ToString("hh\:mm\:ss")
     End Sub
 
@@ -37,14 +35,12 @@ Public Class CreateSubmissionForm
     End Sub
 
     Private Async Sub btnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
-        ' Collect data from text boxes
         Dim name As String = txtName.Text
         Dim email As String = txtEmail.Text
         Dim phone As String = txtPhone.Text
         Dim githubLink As String = txtGitHub.Text
         Dim stopwatchTimeStr As String = txtStopwatch.Text
 
-        ' Submit data to backend
         Await SubmitForm(name, email, phone, githubLink, stopwatchTimeStr)
     End Sub
 

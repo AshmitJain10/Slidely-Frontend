@@ -8,10 +8,7 @@ Public Class ViewSubmissionsForm
     Private editing As Boolean = False
 
     Private Async Sub ViewSubmissionsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' Initialize form controls
-        Me.Text = "View Submissions"
 
-        ' Retrieve submissions from backend
         submissions = Await GetSubmissions()
         If submissions IsNot Nothing AndAlso submissions.Count > 0 Then
             DisplaySubmission(currentIndex)
